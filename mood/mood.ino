@@ -15,5 +15,5 @@ void loop() {
     potVal = analogRead(potPin);
     Serial.print("potVal: ")
     Serial.print(potVal)'
-    angle = map(potVal, 0, 123)
+    angle = map(potVal, 0, 1023)
 }
