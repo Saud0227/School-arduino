@@ -14,7 +14,7 @@ void loop(){
     if(switchState == LOW){
         digitalWrite(3, HIGH);
         digitalWrite(4, LOW);
-        digitalWrite(5, LOW);
+        digitalWrite(5, HIGH);
     }else{
         digitalWrite(3, LOW);
         digitalWrite(4, LOW);
