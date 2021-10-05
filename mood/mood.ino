@@ -5,7 +5,7 @@ int potVal;
 int angle;
 
 void setup() {
-    myServo.attach(9);
+    myServo.attach(2);
 
     Serial.begin(9600);
     
@@ -18,6 +18,7 @@ void loop() {
     angle = map(potVal, 0, 1023, 0, 179);
     Serial.print(", angle, ");
     Serial.print(angle);
+    Serial.print("\n");
 
     myServo.write(angle);
     delay(15);
