@@ -1,6 +1,6 @@
 int sensorValue;
 int sensorLow = 1023;
-int sensorHigh = 0:
+int sensorHigh = 0;
 
 const int ledPin = 13;
 
