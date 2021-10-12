@@ -8,7 +8,11 @@ void setup(){
     pinMode(down, INPUT);
 }
 
-void loop(){;
-    Serial.print(analogRead(up),analogRead(down));
+void loop(){
+    Serial.print("up ");
+    Serial.print(digitalRead(up));
+    Serial.print("\nDown ");
+    Serial.print(digitalRead(down));
+    Serial.print("\n");
     delay(250);
 }
