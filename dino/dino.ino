@@ -12,6 +12,8 @@ const int up = 7;
 const int down = 6;
 //more variables
 
+
+int tmpT = 10;
 void setup(){
     Serial.begin(9600);
     //opens a serial, a way to get feedback whilee runing code
@@ -27,17 +29,32 @@ void setup(){
 
 
 void loop(){
-    /* Serial.print("up ");
+    
     Serial.print(digitalRead(up));
     Serial.print("\nDown ");
     Serial.print(digitalRead(down));
     Serial.print("\n");
-    delay(250); */
+    Serial.print(tmpT);
+    Serial.print("\n");
+    
+    if(digitalRead(up)==1){
+        tmpT+=10;
+    }
+    if(digitalRead(down)==1){
+        tmpT-=10;
+    }
 
     //Test code for button
 
     lcd.setCursor(0, 1);
     // print the number of seconds since reset:
-    lcd.print(millis() / 1000);
-    //tst code for lcd
+    lcd.print(millis());
+    //tst code for 
+    lcd.setCursor(7,1);
+    lcd.print(tmpT);
+    if(tmpT <= 0){
+        delay(1);
+    }else{
+        delay(tmpT);
+    }
 }
