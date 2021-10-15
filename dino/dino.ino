@@ -22,8 +22,28 @@ byte dino[8] = {
 	0b10110,
 	0b10010
 };
-
-
+// Cactus
+/*byte customChar[8] = {
+	0b00100,
+	0b10101,
+	0b10101,
+	0b11111,
+	0b00100,
+	0b00100,
+	0b00100,
+	0b00000
+};*/
+// Bird 
+/* byte customChar[8] = {
+	0b01000,
+	0b11111,
+	0b00110,
+	0b00100,
+	0b00000,
+	0b00000,
+	0b00000,
+	0b00000
+}; */
 int tmpT = 10;
 void setup(){
     Serial.begin(9600);
