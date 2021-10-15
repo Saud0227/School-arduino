@@ -23,7 +23,7 @@ byte dino[8] = {
 	0b10010
 };
 // Cactus
-/*byte customChar[8] = {
+byte cactus[8] = {
 	0b00100,
 	0b10101,
 	0b10101,
@@ -32,9 +32,10 @@ byte dino[8] = {
 	0b00100,
 	0b00100,
 	0b00000
-};*/
+};
+
 // Bird 
-/* byte customChar[8] = {
+byte bird[8] = {
 	0b01000,
 	0b11111,
 	0b00110,
@@ -43,7 +44,7 @@ byte dino[8] = {
 	0b00000,
 	0b00000,
 	0b00000
-}; */
+}; 
 int tmpT = 10;
 void setup(){
     Serial.begin(9600);
@@ -58,6 +59,8 @@ void setup(){
     lcd.print("hello, world!");
 
     lcd.createChar(0, dino); // create a new custom character
+    lcd.createChar(1, cactus); // create a new custom character
+    lcd.createChar(2, bird); // create a new custom character
 }
 
 
