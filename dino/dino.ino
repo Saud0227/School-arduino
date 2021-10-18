@@ -6,7 +6,7 @@
 const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 //This declairs variables as constants, meaning they wont change while the code is running
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
-//creates the lcd variable witch has the ports as inputs 
+//creates the lcd variable witch has the ports as inputs
 
 const int up = 7;
 const int down = 6;
@@ -34,7 +34,7 @@ byte cactus[8] = {
 	0b00000
 };
 
-// Bird 
+// Bird
 byte bird[8] = {
 	0b01000,
 	0b11111,
@@ -44,11 +44,11 @@ byte bird[8] = {
 	0b00000,
 	0b00000,
 	0b00000
-}; 
+};
 int tmpT = 10;
 void setup(){
     Serial.begin(9600);
-    //opens a serial, a way to get feedback whilee runing code
+    //opens a serial, a way to get feedback while runing code
 
     pinMode(up, INPUT);
     pinMode(down, INPUT);
@@ -65,14 +65,14 @@ void setup(){
 
 
 void loop(){
-    
+
     Serial.print(digitalRead(up));
     Serial.print("\nDown ");
     Serial.print(digitalRead(down));
     Serial.print("\n");
     /* Serial.print(tmpT);
     Serial.print("\n");
-    
+
     if(digitalRead(up)==1){
         tmpT+=10;
     }
@@ -85,7 +85,7 @@ void loop(){
     lcd.setCursor(0, 1);
     // print the number of seconds since reset:
     lcd.print(millis()/1000);
-    //tst code for 
+    //tst code for
     /* lcd.setCursor(7,1);
     lcd.print(tmpT);
     if(tmpT <= 0){
