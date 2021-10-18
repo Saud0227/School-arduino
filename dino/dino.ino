@@ -46,6 +46,12 @@ byte bird[8] = {
 	0b00000
 };
 int tmpT = 10;
+
+
+void dispChar(charType = "0", x, y){
+    lcd.setCursor(x,y);
+    lcd.write((byte)charType);
+}
 void setup(){
     Serial.begin(9600);
     //opens a serial, a way to get feedback while runing code
