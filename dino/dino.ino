@@ -48,9 +48,9 @@ byte bird[8] = {
 int tmpT = 10;
 
 
-void dispChar(charType = "0", x, y){
-    lcd.setCursor(x,y);
-    lcd.write((byte)charType);
+void dispChar(byte charToWrite, int tx, int ty){
+    lcd.setCursor(tx,ty);
+    lcd.write(charToWrite);
 }
 void setup(){
     Serial.begin(9600);
@@ -102,6 +102,6 @@ void loop(){
     }
      lcd.setCursor(7,1);
     lcd.write((byte)0); */
-    dispChar(0,7,1);
+    dispChar(((byte)0),7,1);
     delay(25);
 }
