@@ -91,15 +91,17 @@ void loop(){
     lcd.setCursor(0, 1);
     // print the number of seconds since reset:
     lcd.print(millis()/1000);
-    //tst code for
+    //tst code for lcd and buttons
+
     /* lcd.setCursor(7,1);
     lcd.print(tmpT);
     if(tmpT <= 0){
         delay(1);
     }else{
         delay(tmpT);
-    } */
-    lcd.setCursor(7,1);
-    lcd.write((byte)0);
+    }
+     lcd.setCursor(7,1);
+    lcd.write((byte)0); */
+    dispChar(0,7,1);
     delay(25);
 }
