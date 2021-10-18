@@ -12,6 +12,11 @@ const int up = 7;
 const int down = 6;
 //more variables
 
+// Game vars
+
+int blockXPos[10];
+bool BlockType[10];
+
 byte dino[8] = {
 	0b00110,
 	0b01011,
@@ -52,6 +57,7 @@ void dispChar(byte charToWrite, int tx, int ty){
     lcd.setCursor(tx,ty);
     lcd.write(charToWrite);
 }
+
 void setup(){
     Serial.begin(9600);
     //opens a serial, a way to get feedback while runing code
@@ -62,7 +68,6 @@ void setup(){
 
     // starts lcd
     lcd.begin(16, 2);
-    lcd.print("hello, world!");
 
     lcd.createChar(0, dino); // create a new custom character
     lcd.createChar(1, cactus); // create a new custom character
@@ -76,32 +81,13 @@ void loop(){
     Serial.print("\nDown ");
     Serial.print(digitalRead(down));
     Serial.print("\n");
-    /* Serial.print(tmpT);
-    Serial.print("\n");
 
-    if(digitalRead(up)==1){
-        tmpT+=10;
-    }
-    if(digitalRead(down)==1){
-        tmpT-=10;
-    } */
 
-    //Test code for button
-
-    lcd.setCursor(0, 1);
+    lcd.setCursor(15, 0);
     // print the number of seconds since reset:
     lcd.print(millis()/1000);
-    //tst code for lcd and buttons
 
-    /* lcd.setCursor(7,1);
-    lcd.print(tmpT);
-    if(tmpT <= 0){
-        delay(1);
-    }else{
-        delay(tmpT);
-    }
-     lcd.setCursor(7,1);
-    lcd.write((byte)0); */
-    dispChar(((byte)0),7,1);
+
+    dispChar(((byte)0),1,1);
     delay(25);
 }
