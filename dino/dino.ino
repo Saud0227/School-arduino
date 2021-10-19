@@ -18,6 +18,8 @@ int crouchState;
 
 int blockXPos[10];
 bool BlockType[10];
+int jumpT  = -1;
+bool crouchState = false;
 
 byte dino[8] = {
 	0b00110,
@@ -76,19 +78,17 @@ void setup(){
 
 
 void loop(){
-
-    Serial.print(digitalRead(up));
-    Serial.print("\nDown ");
-    Serial.print(digitalRead(down));
-    Serial.print("\n");
     
+
     jumpState = digitalRead(up);
     crouchState = digitalRead(down);
-    if (jumpState == LOW) {
+    if (jumpState == HIGH && jumpT < 0) {
         Serial.print("JUMP");
+        jumpT = 105;
     }
-    if (crouchState == LOW) {
-        Serial.print("CROUCH")
+    if (crouchState == HIGH) {
+        Serial.print("CROUCH");
+        crouchState = true;
     }
 
     lcd.setCursor(15, 0);
@@ -96,6 +96,20 @@ void loop(){
     lcd.print(millis()/1000);
 
 
+    if (crouchState == true) {
+        // crouch code
+    }
+
+    if (jumpT > 0) {
+        if (crouchState == true) {
+            jumpT = -1;
+        }
+        else {
+            //jumpcode 
+            jumpT -= 1;
+        }
+      
+    }
     dispChar((byte)0,1,1);
     dispChar((byte)1,3,1);
     dispChar((byte)2,5,1);
