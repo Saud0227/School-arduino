@@ -89,5 +89,7 @@ void loop(){
 
 
     dispChar(((byte)0),1,1);
+    dispChar((byte)1,3,1);
+    dispChar((byte)2,5,1);
     delay(25);
 }
