@@ -72,6 +72,13 @@ void setup(){
     lcd.createChar(0, dino); // create a new custom character
     lcd.createChar(1, cactus); // create a new custom character
     lcd.createChar(2, bird); // create a new custom character
+
+
+	//-----------------------------------------
+
+	for(int i = 0; i<sizeof(blockXPos);i++){
+		Serial.print(i);
+	}
 }
 
 
