@@ -14,8 +14,8 @@ const int down = 6;
 
 // Game vars
 
-int blockXPos[10];
-bool BlockType[10];
+int blockXPos[10] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+int blockType[10] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
 
 byte dino[8] = {
 	0b00110,
@@ -76,18 +76,27 @@ void setup(){
 
 	//-----------------------------------------
 
-	for(int i = 0; i<sizeof(blockXPos);i++){
-		Serial.print(i);
+	for(int i = 0; i < sizeof(blockXPos); i++){
+		Serial.print(i + " ");
+		blockXPos[i] = -1;
+		blockType[i] = -1;
 	}
+
+	blockXPos[0] = 7;
+	blockType[0] = 1;
+	blockXPos[1] = 8;
+	blockType[1] = 2;
+	blockXPos[2] = 9;
+	blockType[2] = 0;
 }
 
 
 void loop(){
 
-    Serial.print(digitalRead(up));
+    /* Serial.print(digitalRead(up));
     Serial.print("\nDown ");
     Serial.print(digitalRead(down));
-    Serial.print("\n");
+    Serial.print("\n"); */
 
 
     lcd.setCursor(15, 0);
@@ -99,4 +108,21 @@ void loop(){
     dispChar((byte)1,3,1);
     dispChar((byte)2,5,1);
     delay(25);
+
+
+
+	for (int i = 0; i < sizeof(blockXPos); i++){
+		if(blockXPos[i] != -1){
+			if(blockType[i] == 2){
+				dispChar((byte)2,blockXPos[i],0);
+			}else if (blockType[i]==1){
+				dispChar((byte)2,blockXPos[i],1);
+			}else if (blockType[i]==0){
+				dispChar((byte)1,blockXPos[i],0);
+
+			}
+			
+		}
+	}
+	
 }
