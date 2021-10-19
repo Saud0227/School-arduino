@@ -10,6 +10,8 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 const int up = 7;
 const int down = 6;
+int jumpState;
+int crouchState;
 //more variables
 
 // Game vars
@@ -50,8 +52,6 @@ byte bird[8] = {
 	0b00000,
 	0b00000
 };
-int tmpT = 10;
-
 
 void dispChar(byte charToWrite, int tx, int ty){
     lcd.setCursor(tx,ty);
@@ -81,15 +81,25 @@ void loop(){
     Serial.print("\nDown ");
     Serial.print(digitalRead(down));
     Serial.print("\n");
-
+    
+    jumpState = digitalRead(up);
+    crouchState = digitalRead(down);
+    if (jumpState == LOW) {
+        Serial.print("JUMP");
+    }
+    if (crouchState == LOW) {
+        Serial.print("CROUCH")
+    }
 
     lcd.setCursor(15, 0);
     // print the number of seconds since reset:
     lcd.print(millis()/1000);
 
 
-    dispChar(((byte)0),1,1);
+    dispChar((byte)0,1,1);
     dispChar((byte)1,3,1);
     dispChar((byte)2,5,1);
     delay(25);
+
+
 }
