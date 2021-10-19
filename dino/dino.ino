@@ -75,7 +75,7 @@ byte Crouch2[8] = {
 
 void setup(){
     Serial.begin(9600);
-    //opens a serial, a way to get feedback whilee runing code
+    //opens a serial, a way to get feedback while runing code
 
     pinMode(up, INPUT);
     pinMode(down, INPUT);
@@ -93,18 +93,18 @@ void setup(){
 
 	//-----------------------------------------
 
-	for(int i = 0; i < sizeof(blockXPos); i++){
-		Serial.print(i + " ");
+	 for(int i = 0; i < sizeof(blockXPos) / sizeof(blockXPos[0]); i++){
+		Serial.print(i + "_");
 		blockXPos[i] = -1;
 		blockType[i] = -1;
 	}
-
+    /*
 	blockXPos[0] = 7;
 	blockType[0] = 1;
 	blockXPos[1] = 8;
 	blockType[1] = 2;
 	blockXPos[2] = 9;
-	blockType[2] = 0;
+	blockType[2] = 0; */
 }
 
 void dispChar(byte charToWrite, int tx, int ty){
@@ -124,6 +124,7 @@ void loop(){
     lcd.setCursor(0, 1);
     // print the number of seconds since reset:
     lcd.print(millis()/1000);
+	// Serial.print(millis()/1000);
     //tst code for 
     /* lcd.setCursor(7,1);
     lcd.print(tmpT);
@@ -138,7 +139,7 @@ void loop(){
 
 
 
-	for (int i = 0; i < sizeof(blockXPos); i++){
+	/* for (int i = 0; i < sizeof(blockXPos); i++){
 		if(blockXPos[i] != -1){
 			if(blockType[i] == 2){
 				dispChar((byte)2,blockXPos[i],0);
@@ -148,8 +149,7 @@ void loop(){
 				dispChar((byte)1,blockXPos[i],0);
 
 			}
-			
+
 		}
-	}
-	
+	} */
 }
