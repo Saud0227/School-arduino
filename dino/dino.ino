@@ -10,14 +10,17 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 const int up = 7;
 const int down = 6;
-int jumpState;
+int jumpRaw;
 int crouchButton;
+
+int jumpDuration = 105;
 //more variables
 
 // Game vars
 
 int jumpT  = -1;
 bool crouchState = false;
+bool jumpstate = false;
 int blockXPos[10];
 int blockType[10];
 
@@ -103,12 +106,6 @@ void setup(){
 		blockType[i] = -1;
 	}
   
-	blockXPos[0] = 7;
-	blockType[0] = 1;
-	blockXPos[1] = 8;
-	blockType[1] = 2;
-	blockXPos[2] = 9;
-	blockType[2] = 0; 
 }
 
 void dispChar(byte charToWrite, int tx, int ty){
@@ -119,47 +116,43 @@ void dispChar(byte charToWrite, int tx, int ty){
 void loop(){
     
 
-    jumpState = digitalRead(up);
+    jumpRaw = digitalRead(up);
     crouchButton = digitalRead(down);
-    if (jumpState == HIGH && jumpT < 0) {
-        Serial.print("JUMP");
-        jumpT = 105;
-		//jump code
-		jumpT -= 1;
-    }
+
+
+    if (jumpRaw == HIGH && jumpT < 0) {
+        jumpstate = true;
+		Serial.print(jumpstate);
+        jumpT = jumpDuration;
+    }else if (jumpT > -1){
+		jumpT-=1;
+	}else if(jumpT < 0){
+		jumpstate = false;
+	}
+	
     if (crouchButton == HIGH) {
-        Serial.print("CROUCH");
-        //crouch code
-    }
+		crouchState = true;
+		Serial.print("Croutch");
+        if(jumpstate){
+			jumpstate = false;
+			jumpT = -1;
+		}
+    }else
+	{
+		crouchState = false;
+		Serial.print("Stands");
+	}
+	
 
     lcd.setCursor(0, 1);
 
     // print the number of seconds since reset:
     lcd.print(millis()/1000);
 
-
-    lcd.setCursor(7,1);
-    lcd.write((byte)0);
     delay(25);
 
 
-    /* if (crouchState == true) {
-        // crouch code
-    }
-
-    if (jumpT > -1) {
-        if (crouchState == true) {
-            jumpT = -1;
-            Serial.print(jumpT);
-        }
-        else {
-            //jumpcode 
-            jumpT -= 1;
-            Serial.print(jumpT);
-        }
-      
-    }
-	*/
+   
 
 
 
