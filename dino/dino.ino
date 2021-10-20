@@ -133,17 +133,11 @@ void loop(){
     }
 
     lcd.setCursor(0, 1);
+
     // print the number of seconds since reset:
     lcd.print(millis()/1000);
-	// Serial.print(millis()/1000);
-    //tst code for 
-    /* lcd.setCursor(7,1);
-    lcd.print(tmpT);
-    if(tmpT <= 0){
-        delay(1); 
-    }else{
-        delay(tmpT);
-    } */
+
+
     lcd.setCursor(7,1);
     lcd.write((byte)0);
     delay(25);
@@ -165,9 +159,6 @@ void loop(){
         }
       
     }
-    dispChar((byte)0,1,1);
-    dispChar((byte)1,3,1);
-    dispChar((byte)2,5,1);
 
 
 
