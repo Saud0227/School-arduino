@@ -89,8 +89,6 @@ void loop(){
     if (crouchButton == HIGH) {
         Serial.print("CROUCH");
         crouchState = true;
-    } else {
-        crouchState = false;
     }
 
     lcd.setCursor(15, 0);
