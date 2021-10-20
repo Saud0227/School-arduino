@@ -158,7 +158,7 @@ void loop(){
 			clearChar(2,1);
 	    }else if (jumpT > -1){
 			jumpT-=1;
-		}else if(jumpT < 0){
+		}else if(jumpT < 0 && jumpstate == true){
 			jumpstate = false;
 			clearChar(2,0);
 		}
@@ -191,7 +191,7 @@ void loop(){
 
 
 		for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
-			if(blockXPos[i]>0){
+			if(blockXPos[i]>-1){
 				if(blockXPos[i] == 2){
 
 					//Checking col
@@ -206,8 +206,8 @@ void loop(){
 					}
 					//-------------------------------------------------------
 
-				}else if(blockXPos[i]<16){
-					blockXPos[i] -=1;
+				}
+				if(blockXPos[i]<16 && gameOver == false){
 
 
 					//-------------------------------------------------------
@@ -220,6 +220,7 @@ void loop(){
 					}
 					//-------------------------------------------------------
 				}
+				blockXPos[i] -=1;
 			}
 		}
 
@@ -244,12 +245,6 @@ void loop(){
 	0 => Cactus
 	1 => High bird
 	2 => Low bird
-
-
-
-
-
-
 	*/
 	}
 }
