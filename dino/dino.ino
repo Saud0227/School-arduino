@@ -125,6 +125,9 @@ void setup(){
 
 }
 
+
+//--------------------------------------------------
+
 void dispChar(byte charToWrite, int tx, int ty){
 
     lcd.setCursor(tx,ty);
@@ -134,113 +137,119 @@ void clearChar(int tx, int ty){
 	lcd.setCursor(tx,ty);
     lcd.write(" ");
 }
+
+//--------------------------------------------------
+
 void loop(){
 	// lcd.clear();
+	if(gameOver){
+		Serial.print("Game Over");
+	}else{
+
+	    jumpRaw = digitalRead(up);
+	    crouchButton = digitalRead(down);
 
 
-    jumpRaw = digitalRead(up);
-    crouchButton = digitalRead(down);
 
-
-
-    if (jumpRaw == HIGH && jumpT < 0) {
-        jumpstate = true;
-		Serial.print("Jump!\n");
-        jumpT = jumpDuration;
-		clearChar(2,1);
-    }else if (jumpT > -1){
-		jumpT-=1;
-	}else if(jumpT < 0){
-		jumpstate = false;
-		clearChar(2,0);
-	}
-
-    if (crouchButton == HIGH && crouchState != true) {
-		crouchState = true;
-		Serial.print("crouch\n");
-        if(jumpstate){
+	    if (jumpRaw == HIGH && jumpT < 0) {
+	        jumpstate = true;
+			Serial.print("Jump!\n");
+	        jumpT = jumpDuration;
+			clearChar(2,1);
+	    }else if (jumpT > -1){
+			jumpT-=1;
+		}else if(jumpT < 0){
 			jumpstate = false;
-			jumpT = -1;
+			clearChar(2,0);
 		}
-    }else if(crouchState && crouchButton == LOW)
-	{
-		crouchState = false;
-		Serial.print("Stands\n");
-		clearChar(3,1);
-	}
+
+	    if (crouchButton == HIGH && crouchState != true) {
+			crouchState = true;
+			Serial.print("crouch\n");
+	        if(jumpstate){
+				jumpstate = false;
+				jumpT = -1;
+			}
+	    }else if(crouchState && crouchButton == LOW)
+		{
+			crouchState = false;
+			Serial.print("Stands\n");
+			clearChar(3,1);
+		}
 
 
-    lcd.setCursor(14,0);
+	    lcd.setCursor(14,0);
 
-    // print the number of seconds since reset:
-    lcd.print(millis()/1000);
-
-
+	    // print the number of seconds since reset:
+	    lcd.print(millis()/1000);
 
 
 
 
 
 
-	for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
-		if(blockXPos[i]>0){
-			if(blockXPos[i] == 2){
 
-				//Checking col
-				//-------------------------------------------------------
-				if(blockType[i] == 0 && jumpstate==false){
-					gameOver = true;
-				}else if (blockType[i] == 1 && jumpstate)
-				{
-					gameOver = true;
-				}else if (blockType[i] == 2 && crouchState == false){
-					gameOver = true;
+
+		for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
+			if(blockXPos[i]>0){
+				if(blockXPos[i] == 2){
+
+					//Checking col
+					//-------------------------------------------------------
+					if(blockType[i] == 0 && jumpstate==false){
+						gameOver = true;
+					}else if (blockType[i] == 1 && jumpstate)
+					{
+						gameOver = true;
+					}else if (blockType[i] == 2 && crouchState == false){
+						gameOver = true;
+					}
+					//-------------------------------------------------------
+
+				}else if(blockXPos[i]<16){
+					blockXPos[i] -=1;
+
+
+					//-------------------------------------------------------
+					if(blockType[i] == 2){
+						dispChar((byte)2,blockXPos[i],1);
+					}else if (blockType[i]==1){
+						dispChar((byte)2,blockXPos[i],0);
+					}else if (blockType[i]==0){
+						dispChar((byte)1,blockXPos[i],1);
+					}
+					//-------------------------------------------------------
 				}
-				//-------------------------------------------------------
-
-			}else if(blockXPos[i]<16){
-				blockXPos[i] -=1;
-
-
-				//-------------------------------------------------------
-				if(blockType[i] == 2){
-					dispChar((byte)2,blockXPos[i],1);
-				}else if (blockType[i]==1){
-					dispChar((byte)2,blockXPos[i],0);
-				}else if (blockType[i]==0){
-					dispChar((byte)1,blockXPos[i],1);
-				}
-				//-------------------------------------------------------
 			}
 		}
+
+
+
+
+		Serial.print(jumpstate);
+		Serial.print(crouchState);
+		Serial.print("\n");
+
+		delay(tickS);
+		if(jumpstate){
+			dispChar((byte)0,2,0);
+		}else if (crouchState){
+			dispChar((byte)3,2,1);
+			dispChar((byte)4,3,1);
+		}else{
+			dispChar((byte)0,2,1);
+		}
+	/*
+	Blocker key:
+	0 => Cactus
+	1 => High bird
+	2 => Low bird
+
+
+
+
+
+
+	*/
 	}
-
-
-
-
-	Serial.print(jumpstate);
-	Serial.print(crouchState);
-	Serial.print("\n");
-
-	delay(tickS);
-	if(jumpstate){
-		dispChar((byte)0,2,0);
-	}else if (crouchState){
-		dispChar((byte)3,2,1);
-		dispChar((byte)4,3,1);
-	}else{
-		dispChar((byte)0,2,1);
-	}
-/*
-Blocker key:
-0 => Cactus
-1 => High bird
-2 => Low bird
-
-
-
-
-
-
-*/
 }
