@@ -14,8 +14,8 @@ const int down = 6;
 
 // Game vars
 
-int blockXPos[10] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-int blockType[10] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+int blockXPos[10] = {};
+int blockType[10] = {};
 
 byte dino[8] = {
 	0b00110,
@@ -93,7 +93,7 @@ void setup(){
 
 	//-----------------------------------------
 
-	for(int i = 0; i < sizeof(blockXPos); i++){
+	for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
 		Serial.print(i + " ");
 		blockXPos[i] = -1;
 		blockType[i] = -1;
@@ -138,7 +138,7 @@ void loop(){
 
 
 
-	for (int i = 0; i < sizeof(blockXPos); i++){
+	for (int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[i]); i++){
 		if(blockXPos[i] != -1){
 			if(blockType[i] == 2){
 				dispChar((byte)2,blockXPos[i],0);
