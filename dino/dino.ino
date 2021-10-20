@@ -124,10 +124,12 @@ void loop(){
     if (jumpState == HIGH && jumpT < 0) {
         Serial.print("JUMP");
         jumpT = 105;
+		//jump code
+		jumpT -= 1;
     }
     if (crouchButton == HIGH) {
         Serial.print("CROUCH");
-        crouchState = true;
+        //crouch code
     }
 
     lcd.setCursor(0, 1);
