@@ -16,12 +16,10 @@ int crouchButton;
 
 // Game vars
 
-int blockXPos[10];
-bool BlockType[10];
 int jumpT  = -1;
 bool crouchState = false;
-int blockXPos[10] = {};
-int blockType[10] = {};
+int blockXPos[10];
+int blockType[10];
 
 byte dino[8] = {
 	0b00110,
@@ -104,13 +102,13 @@ void setup(){
 		blockXPos[i] = -1;
 		blockType[i] = -1;
 	}
-    /*
+  
 	blockXPos[0] = 7;
 	blockType[0] = 1;
 	blockXPos[1] = 8;
 	blockType[1] = 2;
 	blockXPos[2] = 9;
-	blockType[2] = 0; */
+	blockType[2] = 0; 
 }
 
 void dispChar(byte charToWrite, int tx, int ty){
@@ -126,10 +124,12 @@ void loop(){
     if (jumpState == HIGH && jumpT < 0) {
         Serial.print("JUMP");
         jumpT = 105;
+		//jump code
+		jumpT -= 1;
     }
     if (crouchButton == HIGH) {
         Serial.print("CROUCH");
-        crouchState = true;
+        //crouch code
     }
 
     lcd.setCursor(0, 1);
@@ -143,11 +143,11 @@ void loop(){
     delay(25);
 
 
-    if (crouchState == true) {
+    /* if (crouchState == true) {
         // crouch code
     }
 
-    if (jumpT > 0) {
+    if (jumpT > -1) {
         if (crouchState == true) {
             jumpT = -1;
             Serial.print(jumpT);
@@ -159,7 +159,7 @@ void loop(){
         }
       
     }
-
+	*/
 
 
 
