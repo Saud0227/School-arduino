@@ -1,4 +1,5 @@
 // This is a comment, a way to write text in code without the code runing the line
+#pragma region
 
 #include <LiquidCrystal.h>
 // This imports code we need to run the LCD
@@ -8,15 +9,18 @@ const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 //creates the lcd variable witch has the ports as inputs 
 
+#pragma endregion
+
 const int up = 7;
 const int down = 6;
 
 const int tickS = 10;
+bool gameOver = false;
 
 int jumpRaw;
 int crouchButton;
 
-const int jumpDuration = 1*1000/tickS;
+const int jumpDuration = 0.5*1000/tickS;
 //more variables
 
 // Game vars
@@ -26,6 +30,9 @@ bool crouchState = false;
 bool jumpstate = false;
 int blockXPos[10];
 int blockType[10];
+
+int sqToClearX[10];
+int sqToClearY[10];
 
 byte dino[8] = {
 	0b00110,
@@ -49,7 +56,7 @@ byte cactus[8] = {
 	0b00000
 };
 
-// Bird 
+// Bird
 byte bird[8] = {
 	0b01000,
 	0b11111,
@@ -108,38 +115,49 @@ void setup(){
 		blockXPos[i] = -1;
 		blockType[i] = -1;
 	}
-  
+
+	blockXPos[0] = 7;
+	blockType[0] = 1;
+	blockXPos[1] = 8;
+	blockType[1] = 2;
+	blockXPos[2] = 9;
+	blockType[2] = 0;
+
 }
 
 void dispChar(byte charToWrite, int tx, int ty){
+
     lcd.setCursor(tx,ty);
     lcd.write(charToWrite);
 }
-
+void clearChar(int tx, int ty){
+	lcd.setCursor(tx,ty);
+    lcd.write(" ");
+}
 void loop(){
-    
+	// lcd.clear();
+
 
     jumpRaw = digitalRead(up);
     crouchButton = digitalRead(down);
 
-	/* Serial.print((jumpRaw==HIGH));
-	Serial.print(jumpT);
-	Serial.print(jumpstate);
-	Serial.print("\n"); */
+
 
     if (jumpRaw == HIGH && jumpT < 0) {
         jumpstate = true;
 		Serial.print("Jump!\n");
         jumpT = jumpDuration;
+		clearChar(2,1);
     }else if (jumpT > -1){
 		jumpT-=1;
 	}else if(jumpT < 0){
 		jumpstate = false;
+		clearChar(2,0);
 	}
-	
+
     if (crouchButton == HIGH && crouchState != true) {
 		crouchState = true;
-		Serial.print("Croutch\n");
+		Serial.print("crouch\n");
         if(jumpstate){
 			jumpstate = false;
 			jumpT = -1;
@@ -148,37 +166,81 @@ void loop(){
 	{
 		crouchState = false;
 		Serial.print("Stands\n");
+		clearChar(3,1);
 	}
-	
 
-    lcd.setCursor(1, 0);
+
+    lcd.setCursor(14,0);
 
     // print the number of seconds since reset:
     lcd.print(millis()/1000);
 
 
 
-   
 
 
 
-	for (int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[i]); i++){
-		if(blockXPos[i] != -1){
-			if(blockType[i] == 2){
-				dispChar((byte)2,blockXPos[i],0);
-			}else if (blockType[i]==1){
-				dispChar((byte)2,blockXPos[i],1);
-			}else if (blockType[i]==0){
-				dispChar((byte)1,blockXPos[i],0);
 
+
+	for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
+		if(blockXPos[i]>0){
+			if(blockXPos[i] == 2){
+
+				//Checking col
+				//-------------------------------------------------------
+				if(blockType[i] == 0 && jumpstate==false){
+					gameOver = true;
+				}else if (blockType[i] == 1 && jumpstate)
+				{
+					gameOver = true;
+				}else if (blockType[i] == 2 && crouchState == false){
+					gameOver = true;
+				}
+				//-------------------------------------------------------
+
+			}else if(blockXPos[i]<16){
+				blockXPos[i] -=1;
+
+
+				//-------------------------------------------------------
+				if(blockType[i] == 2){
+					dispChar((byte)2,blockXPos[i],1);
+				}else if (blockType[i]==1){
+					dispChar((byte)2,blockXPos[i],0);
+				}else if (blockType[i]==0){
+					dispChar((byte)1,blockXPos[i],1);
+				}
+				//-------------------------------------------------------
 			}
-
 		}
 	}
 
 
+
+
+	Serial.print(jumpstate);
+	Serial.print(crouchState);
+	Serial.print("\n");
+
 	delay(tickS);
+	if(jumpstate){
+		dispChar((byte)0,2,0);
+	}else if (crouchState){
+		dispChar((byte)3,2,1);
+		dispChar((byte)4,3,1);
+	}else{
+		dispChar((byte)0,2,1);
+	}
+/*
+Blocker key:
+0 => Cactus
+1 => High bird
+2 => Low bird
 
-	dispChar((byte)0,2,1);
 
+
+
+
+
+*/
 }
