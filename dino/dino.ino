@@ -170,7 +170,6 @@ void loop(){
     dispChar((byte)2,5,1);
 
 
-}
 
 
 	for (int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[i]); i++){
@@ -186,6 +185,6 @@ void loop(){
 
 		}
 	}
-  delay(25);
+	delay(25);
 
 }
