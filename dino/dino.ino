@@ -11,7 +11,7 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 const int up = 7;
 const int down = 6;
 int jumpState;
-int crouchState;
+int crouchButton;
 //more variables
 
 // Game vars
@@ -81,12 +81,12 @@ void loop(){
     
 
     jumpState = digitalRead(up);
-    crouchState = digitalRead(down);
+    crouchButton = digitalRead(down);
     if (jumpState == HIGH && jumpT < 0) {
         Serial.print("JUMP");
         jumpT = 105;
     }
-    if (crouchState == HIGH) {
+    if (crouchButton == HIGH) {
         Serial.print("CROUCH");
         crouchState = true;
     }
@@ -103,10 +103,12 @@ void loop(){
     if (jumpT > 0) {
         if (crouchState == true) {
             jumpT = -1;
+            Serial.print(jumpT);
         }
         else {
             //jumpcode 
             jumpT -= 1;
+            Serial.print(jumpT);
         }
       
     }
