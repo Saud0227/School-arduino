@@ -35,7 +35,10 @@ int sqToClearX[10];
 int sqToClearY[10];
 
 int moveT = -1;
-const int moveTr = 50;
+const int moveTr = 30;
+
+int spawnT = -1;
+int spawnTr = 200;
 
 byte dino[8] = {
 	0b00110,
