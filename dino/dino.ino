@@ -34,6 +34,9 @@ int blockType[10];
 int sqToClearX[10];
 int sqToClearY[10];
 
+int moveT = -1;
+const int moveTr = 50;
+
 byte dino[8] = {
 	0b00110,
 	0b01011,
@@ -116,12 +119,12 @@ void setup(){
 		blockType[i] = -1;
 	}
 
-	blockXPos[0] = 7;
+	blockXPos[0] = 20;
 	blockType[0] = 1;
-	blockXPos[1] = 8;
+	/* blockXPos[1] = 8;
 	blockType[1] = 2;
 	blockXPos[2] = 9;
-	blockType[2] = 0;
+	blockType[2] = 0; */
 
 }
 
@@ -138,6 +141,31 @@ void clearChar(int tx, int ty){
     lcd.write(" ");
 }
 
+void storeToClear(int tx, int ty){
+	for (int i = 0; i < sizeof(sqToClearX)/sizeof(sqToClearX[0]); i++){
+		if(sqToClearX[i] == -1){
+			sqToClearX[i] = tx;
+			sqToClearY[i] = ty;
+			
+			
+			break;
+		}
+	}
+	
+}
+
+bool checkMoveBlocker(){
+	return(moveT > moveTr);
+}
+
+void tickMoveBlocker(){
+	if(moveT > moveTr){
+		moveT = -1;
+	}else{
+		moveT++;
+	}
+
+}
 //--------------------------------------------------
 
 void loop(){
@@ -183,55 +211,66 @@ void loop(){
 	    // print the number of seconds since reset:
 	    lcd.print(millis()/1000);
 
-
-
-
-
-
-
-
-		for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
-			if(blockXPos[i]>-1){
-				if(blockXPos[i] == 2){
-
-					//Checking col
-					//-------------------------------------------------------
-					if(blockType[i] == 0 && jumpstate==false){
-						gameOver = true;
-					}else if (blockType[i] == 1 && jumpstate)
-					{
-						gameOver = true;
-					}else if (blockType[i] == 2 && crouchState == false){
-						gameOver = true;
-					}
-					//-------------------------------------------------------
-
+		if(checkMoveBlocker()){
+			for (int i = 0; i < sizeof(sqToClearX)/sizeof(sqToClearX[0]); i++){
+				if(sqToClearX[i] != -1){
+					clearChar(sqToClearX[i],sqToClearY[i]);
+					sqToClearX[i] = -1;
+					sqToClearY[i] = -1;
 				}
-				if(blockXPos[i]<16 && gameOver == false){
-
-
-					//-------------------------------------------------------
-					if(blockType[i] == 2){
-						dispChar((byte)2,blockXPos[i],1);
-					}else if (blockType[i]==1){
-						dispChar((byte)2,blockXPos[i],0);
-					}else if (blockType[i]==0){
-						dispChar((byte)1,blockXPos[i],1);
-					}
-					//-------------------------------------------------------
-				}
-				blockXPos[i] -=1;
 			}
 		}
 
 
 
 
-		Serial.print(jumpstate);
-		Serial.print(crouchState);
-		Serial.print("\n");
+		if(checkMoveBlocker()){
+			for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
+				if(blockXPos[i]>-1){
+					if(blockXPos[i] == 2){
 
-		delay(tickS);
+						//Checking col
+						//-------------------------------------------------------
+						if(blockType[i] == 0 && jumpstate==false){
+							gameOver = true;
+						}else if (blockType[i] == 1 && jumpstate)
+						{
+							gameOver = true;
+						}else if (blockType[i] == 2 && crouchState == false){
+							gameOver = true;
+						}
+						//-------------------------------------------------------
+
+					}
+					if(blockXPos[i]<16 && gameOver == false){
+
+
+						//-------------------------------------------------------
+						if(blockType[i] == 2){
+							dispChar((byte)2,blockXPos[i],1);
+							storeToClear(blockXPos[i],1);
+						}else if (blockType[i]==1){
+							dispChar((byte)2,blockXPos[i],0);
+							storeToClear(blockXPos[i],0);
+						}else if (blockType[i]==0){
+							dispChar((byte)1,blockXPos[i],1);
+							storeToClear(blockXPos[i],1);
+						}
+						//-------------------------------------------------------
+					}
+					blockXPos[i] -=1;
+				}
+			}
+		}
+
+
+
+
+		/* Serial.print(jumpstate);
+		Serial.print(crouchState);
+		Serial.print("\n"); */
+
+		
 		if(jumpstate){
 			dispChar((byte)0,2,0);
 		}else if (crouchState){
@@ -247,4 +286,6 @@ void loop(){
 	2 => Low bird
 	*/
 	}
+	delay(tickS);
+	tickMoveBlocker();
 }
