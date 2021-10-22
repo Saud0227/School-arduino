@@ -39,6 +39,7 @@ const int moveTr = 30;
 
 int spawnT = -1;
 int spawnTr = 200;
+int mutIncr = 0;
 
 byte dino[8] = {
 	0b00110,
@@ -169,6 +170,16 @@ void tickMoveBlocker(){
 	}
 
 }
+
+
+void spawnB(){
+	if(spawnT>spawnTr){
+		spawnT = 0;
+
+	}else{
+		spawnT+=1;
+	}
+}
 //--------------------------------------------------
 
 void loop(){
@@ -291,4 +302,5 @@ void loop(){
 	}
 	delay(tickS);
 	tickMoveBlocker();
+	spawnB();
 }
