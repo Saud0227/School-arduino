@@ -15,7 +15,7 @@ const int up = 7;
 const int down = 6;
 
 const int tickS = 10;
-bool gameOver = false;
+bool gameOver = true;
 
 int jumpRaw;
 int crouchButton;
@@ -40,6 +40,8 @@ const int moveTr = 30;
 int spawnT = -1;
 int spawnTr = 200;
 int mutIncr = 0;
+
+int countReduct = 0;
 
 byte dino[8] = {
 	0b00110,
@@ -210,7 +212,18 @@ void bSpawn(int x, int type){
 void loop(){
 	// lcd.clear();
 	if(gameOver){
-		Serial.print("Game Over");
+		jumpRaw = digitalRead(up);
+
+		if(jumpRaw == HIGH){
+			gameOver = false;
+			srand(millis());
+			countReduct = millis();
+			for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
+				// Serial.print(i + "\n");
+				blockXPos[i] = -1;
+				blockType[i] = -1;
+			}
+		}
 	}else{
 
 	    jumpRaw = digitalRead(up);
@@ -249,7 +262,7 @@ void loop(){
 	    lcd.setCursor(14,0);
 
 	    // print the number of seconds since reset:
-	    lcd.print(millis()/1000);
+	    lcd.print((millis()-countReduct)/1000);
 
 		if(checkMoveBlocker()){
 			for (int i = 0; i < sizeof(sqToClearX)/sizeof(sqToClearX[0]); i++){
@@ -310,7 +323,7 @@ void loop(){
 		Serial.print(crouchState);
 		Serial.print("\n"); */
 
-		
+
 		if(jumpstate){
 			dispChar((byte)0,2,0);
 		}else if (crouchState){
