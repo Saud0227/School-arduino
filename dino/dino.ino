@@ -150,12 +150,10 @@ void storeToClear(int tx, int ty){
 		if(sqToClearX[i] == -1){
 			sqToClearX[i] = tx;
 			sqToClearY[i] = ty;
-			
-			
 			break;
 		}
 	}
-	
+
 }
 
 bool checkMoveBlocker(){
@@ -165,6 +163,7 @@ bool checkMoveBlocker(){
 void tickMoveBlocker(){
 	if(moveT > moveTr){
 		moveT = -1;
+		
 	}else{
 		moveT++;
 	}
@@ -211,6 +210,7 @@ void loop(){
 	        if(jumpstate){
 				jumpstate = false;
 				jumpT = -1;
+				clearChar(2,0);
 			}
 	    }else if(crouchState && crouchButton == LOW)
 		{
