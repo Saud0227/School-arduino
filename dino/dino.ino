@@ -163,7 +163,6 @@ bool checkMoveBlocker(){
 void tickMoveBlocker(){
 	if(moveT > moveTr){
 		moveT = -1;
-		
 	}else{
 		moveT++;
 	}
@@ -174,9 +173,36 @@ void tickMoveBlocker(){
 void spawnB(){
 	if(spawnT>spawnTr){
 		spawnT = 0;
+		int blockTypeGen = rand() % 100;
+		int toSet = 2;
+		if(blockTypeGen<66){
+			toSet = 0;
+
+		}else if (blockTypeGen<80){
+			toSet = 1;
+
+		}
+		int ranOfset = rand() %4;
+		ranOfset -= 2;
+		bSpawn(20 + ranOfset, toSet);
+		if(rand() % 100 > 66){
+			bSpawn(20 + rand() % 5, toSet);
+		}
 
 	}else{
 		spawnT+=1;
+	}
+}
+
+void bSpawn(int x, int type){
+	for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
+		if(blockXPos[i]==-1){
+			blockXPos[i] = x;
+			blockType[i] = type;
+			Serial.print("Blocker @:" + String(i));
+			Serial.print("\n");
+			break;
+		}
 	}
 }
 //--------------------------------------------------
