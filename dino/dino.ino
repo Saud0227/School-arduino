@@ -42,6 +42,7 @@ int spawnTr = 200;
 int mutIncr = 0;
 
 int countReduct = 0;
+bool starup = true;
 
 byte dino[8] = {
 	0b00110,
@@ -213,9 +214,18 @@ void loop(){
 	// lcd.clear();
 	if(gameOver){
 		jumpRaw = digitalRead(up);
-
+		if(starup){
+			lcd.setCursor(6,0);
+			lcd.print("Start");
+		}else{
+			lcd.setCursor(3,0);
+			lcd.print("Gamer Over");
+		}
 		if(jumpRaw == HIGH){
 			gameOver = false;
+			if(starup){
+				starup = false;
+			}
 			srand(millis());
 			countReduct = millis();
 			for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
@@ -223,7 +233,11 @@ void loop(){
 				blockXPos[i] = -1;
 				blockType[i] = -1;
 			}
+			for(int i = 0; i < 16; i++){
+				clearChar(i,0);
+			}
 		}
+
 	}else{
 
 	    jumpRaw = digitalRead(up);
