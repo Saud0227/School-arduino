@@ -35,7 +35,7 @@ int sqToClearX[10];
 int sqToClearY[10];
 
 int moveT = -1;
-const int moveTr = 30;
+const int moveTr = 15;
 
 int spawnT = -1;
 int spawnTr = 200;
