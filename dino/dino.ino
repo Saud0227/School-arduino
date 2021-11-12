@@ -11,35 +11,42 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 #pragma endregion
 
+// Select pins for up and down
 const int up = 7;
 const int down = 6;
 
+// Tcik speed variable for movement, gameover
 const int tickS = 10;
 bool gameOver = true;
 
+// Variables for storing button input
 int jumpRaw;
 int crouchButton;
 
+// Jump duration to tweek balance if needed
 const int jumpDuration = 0.5*1000/tickS;
-//more variables
+
+
 
 // Game vars
 
 int jumpT  = -1;
 bool crouchState = false;
 bool jumpstate = false;
+
+//Arrays storing blockers info
 int blockXPos[10];
 int blockType[10];
 
 int sqToClearX[10];
 int sqToClearY[10];
 
+//Update clock
 int moveT = -1;
 const int moveTr = 30;
 
 int spawnT = -1;
 int spawnTr = 200;
-int mutIncr = 0;
 
 int countReduct = 0;
 
@@ -125,28 +132,23 @@ void setup(){
 		blockType[i] = -1;
 	}
 
-	blockXPos[0] = 20;
-	blockType[0] = 1;
-	/* blockXPos[1] = 8;
-	blockType[1] = 2;
-	blockXPos[2] = 9;
-	blockType[2] = 0; */
 
 }
 
 
 //--------------------------------------------------
-
+// dispchar function
 void dispChar(byte charToWrite, int tx, int ty){
 
     lcd.setCursor(tx,ty);
     lcd.write(charToWrite);
 }
+// clear a square on the grid
 void clearChar(int tx, int ty){
 	lcd.setCursor(tx,ty);
     lcd.write(" ");
 }
-
+// add square to clear next tick (to not leave ghost blockers)
 void storeToClear(int tx, int ty){
 	for (int i = 0; i < sizeof(sqToClearX)/sizeof(sqToClearX[0]); i++){
 		if(sqToClearX[i] == -1){
@@ -157,11 +159,11 @@ void storeToClear(int tx, int ty){
 	}
 
 }
-
+// simple return check
 bool checkMoveBlocker(){
 	return(moveT > moveTr);
 }
-
+// clock move tick
 void tickMoveBlocker(){
 	if(moveT > moveTr){
 		moveT = -1;
@@ -171,7 +173,7 @@ void tickMoveBlocker(){
 
 }
 
-
+// spawn blocker logic
 void spawnB(){
 	if(spawnT>spawnTr){
 		spawnT = 0;
@@ -195,7 +197,7 @@ void spawnB(){
 		spawnT+=1;
 	}
 }
-
+// actuall spwaning of blocker
 void bSpawn(int x, int type){
 	for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
 		if(blockXPos[i]==-1){
@@ -208,16 +210,22 @@ void bSpawn(int x, int type){
 	}
 }
 //--------------------------------------------------
-
+//Main loop
 void loop(){
 	// lcd.clear();
 	if(gameOver){
+		//Run game over code
 		jumpRaw = digitalRead(up);
 
 		if(jumpRaw == HIGH){
+			//start
 			gameOver = false;
+			//seed for random generated from the milli second the game starts / restarts
 			srand(millis());
+			//for acurate timer
 			countReduct = millis();
+			
+			//clear all blockers
 			for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
 				// Serial.print(i + "\n");
 				blockXPos[i] = -1;
@@ -225,46 +233,52 @@ void loop(){
 			}
 		}
 	}else{
-
+		// if game is live
 	    jumpRaw = digitalRead(up);
 	    crouchButton = digitalRead(down);
 
 
-
+		//if on ground and trying to jump
 	    if (jumpRaw == HIGH && jumpT < 0) {
 	        jumpstate = true;
 			Serial.print("Jump!\n");
 	        jumpT = jumpDuration;
+			// removeing ground dino texture
 			clearChar(2,1);
+
 	    }else if (jumpT > -1){
+			//if in air, tick air time
 			jumpT-=1;
 		}else if(jumpT < 0 && jumpstate == true){
+			//if jump is done reset unless you want to jump again
 			jumpstate = false;
 			clearChar(2,0);
 		}
 
 	    if (crouchButton == HIGH && crouchState != true) {
+			//activate crouch if not allready active when pressing button
 			crouchState = true;
 			Serial.print("crouch\n");
 	        if(jumpstate){
+				//if jumping when trying to crouch, land
 				jumpstate = false;
 				jumpT = -1;
 				clearChar(2,0);
 			}
-	    }else if(crouchState && crouchButton == LOW)
-		{
+	    }else if(crouchState && crouchButton == LOW){
+			//if crouch state is true butt button is not pressed
 			crouchState = false;
 			Serial.print("Stands\n");
 			clearChar(3,1);
 		}
 
-
-	    lcd.setCursor(14,0);
-
 	    // print the number of seconds since reset:
+	    lcd.setCursor(14,0);
 	    lcd.print((millis()-countReduct)/1000);
 
+		//move blockers if they shoudl be moved
 		if(checkMoveBlocker()){
+			//clear ghost blocks
 			for (int i = 0; i < sizeof(sqToClearX)/sizeof(sqToClearX[0]); i++){
 				if(sqToClearX[i] != -1){
 					clearChar(sqToClearX[i],sqToClearY[i]);
@@ -272,17 +286,17 @@ void loop(){
 					sqToClearY[i] = -1;
 				}
 			}
-		}
+		
 
 
 
 
-		if(checkMoveBlocker()){
+			//for each blocker....
 			for(int i = 0; i < sizeof(blockXPos)/sizeof(blockXPos[0]); i++){
 				if(blockXPos[i]>-1){
 					if(blockXPos[i] == 2){
 
-						//Checking col
+						//.. checking colission
 						//-------------------------------------------------------
 						if(blockType[i] == 0 && jumpstate==false){
 							gameOver = true;
@@ -297,7 +311,7 @@ void loop(){
 					}
 					if(blockXPos[i]<16 && gameOver == false){
 
-
+						//draw if they should be drawn
 						//-------------------------------------------------------
 						if(blockType[i] == 2){
 							dispChar((byte)2,blockXPos[i],1);
@@ -311,6 +325,7 @@ void loop(){
 						}
 						//-------------------------------------------------------
 					}
+					//actually do the moving
 					blockXPos[i] -=1;
 				}
 			}
@@ -323,7 +338,8 @@ void loop(){
 		Serial.print(crouchState);
 		Serial.print("\n"); */
 
-
+		//and finally
+		//draw the player
 		if(jumpstate){
 			dispChar((byte)0,2,0);
 		}else if (crouchState){
@@ -339,6 +355,7 @@ void loop(){
 	2 => Low bird
 	*/
 	}
+	//do final ticks and runtime delay
 	delay(tickS);
 	tickMoveBlocker();
 	spawnB();
