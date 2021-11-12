@@ -1,3 +1,5 @@
+
+
 // This is a comment, a way to write text in code without the code runing the line
 #pragma region
 
@@ -43,13 +45,21 @@ int sqToClearY[10];
 
 //Update clock
 int moveT = -1;
-const int moveTr = 30;
+const int moveTr = 15;
 
 int spawnT = -1;
 int spawnTr = 200;
 
+//time var
 int countReduct = 0;
 
+//if first time playing
+bool starup = true;
+
+
+// custum chars
+
+//dino (ground normal)
 byte dino[8] = {
 	0b00110,
 	0b01011,
@@ -216,10 +226,19 @@ void loop(){
 	if(gameOver){
 		//Run game over code
 		jumpRaw = digitalRead(up);
-
+		if(starup){
+			lcd.setCursor(6,0);
+			lcd.print("Start");
+		}else{
+			lcd.setCursor(3,0);
+			lcd.print("Gamer Over");
+		}
 		if(jumpRaw == HIGH){
 			//start
 			gameOver = false;
+			if(starup){
+				starup = false;
+			}
 			//seed for random generated from the milli second the game starts / restarts
 			srand(millis());
 			//for acurate timer
@@ -231,7 +250,11 @@ void loop(){
 				blockXPos[i] = -1;
 				blockType[i] = -1;
 			}
+			for(int i = 0; i < 16; i++){
+				clearChar(i,0);
+			}
 		}
+
 	}else{
 		// if game is live
 	    jumpRaw = digitalRead(up);
